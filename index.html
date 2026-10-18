@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Trade — Institutional Performance Desk</title>
+    <link rel="icon" type="image/svg+xml" href="atlas-logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="theme-default">
+
+    <!-- ================= AUTHENTICATION VIEW ================= -->
+    <div id="auth" class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Auth Top Utilities: Server Status & Language Switcher -->
+            <div class="auth-top-bar">
+                <div class="server-status-pill" id="authServerStatus" title="Server Sync Status">
+                    <span class="status-dot"></span>
+                    <span id="authServerStatusText">Cloud Server</span>
+                </div>
+                <div class="auth-lang-wrapper">
+                    <select id="authLangSelect" class="lang-select-compact" title="Switch Language">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="id">🇮🇩 Indonesia</option>
+                        <option value="ms">🇲🇾 Melayu</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                        <option value="zh">🇨🇳 简体中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                        <option value="th">🇹🇭 ภาษาไทย</option>
+                        <option value="ar">🇸🇦 العربية</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="brand-header">
+                <img src="atlas-logo.svg" alt="Atlas Trade Logo" class="brand-logo-img">
+                <h2 class="brand-title">ATLAS <span>TRADE</span></h2>
+                <p class="brand-subtitle" data-i18n="brandSubtitle">Institutional Performance Desk</p>
+            </div>
+
+            <!-- Quick Login for Remembered Account -->
+            <div id="rememberedCard" class="remembered-card hidden">
+                <div class="remembered-info">
+                    <div class="remembered-avatar" id="remAvatar">AT</div>
+                    <div class="remembered-meta">
+                        <h4 id="remEmail">trader@email.com</h4>
+                        <p data-i18n="rememberedSession">Remembered Session</p>
+                    </div>
+                </div>
+                <button type="button" class="remembered-btn" id="btnQuickLogin"><span data-i18n="signIn">Sign In</span> &rarr;</button>
+            </div>
+
+            <!-- Pending Approval Notice Box -->
+            <div id="pendingNoticeBox" class="pending-notice-box hidden">
+                <div class="pending-notice-icon">⏳</div>
+                <div class="pending-notice-body">
+                    <h4 data-i18n="approvalRequired">Approval Required</h4>
+                    <p id="pendingNoticeText" data-i18n="pendingNoticeText">Your account is awaiting approval from the Desk Administrator. You will be
+                        able to sign in once access is granted.</p>
+                </div>
+                <button type="button" class="btn-close-notice" id="btnClosePendingNotice">&times;</button>
+            </div>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" data-auth="login" id="tabLogin" data-i18n="tabSignIn">Sign In</button>
+                <button type="button" class="auth-tab" data-auth="register" id="tabRegister" data-i18n="tabCreateAccount">Create Account</button>
+            </div>
+
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="email" data-i18n="labelEmail">Trader Email</label>
+                    <input id="email" class="input-field" type="email" placeholder="trader@firm.com" required
+                        autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" data-i18n="labelPassword">Password</label>
+                    <input id="password" class="input-field" type="password" placeholder="••••••••" required
+                        autocomplete="current-password">
+                </div>
+
+                <div class="form-group hidden" id="groupAccountName">
+                    <label for="regAccountName" data-i18n="labelAccountName">Primary Trading Account Name</label>
+                    <input id="regAccountName" class="input-field" type="text"
+                        placeholder="e.g. Apex 50K Prop / FTMO Challenge">
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label" title="Remember this account on this device">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <span data-i18n="rememberAccount">Remember this account</span>
+                    </label>
+                    <a href="#" id="linkForgot" style="color: var(--cyan); text-decoration: none; font-size: 11px;" data-i18n="needHelp">Need
+                        help?</a>
+                </div>
+
+                <button class="btn-primary" type="submit" id="authSubmit">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" />
+                    </svg>
+                    <span id="authSubmitText" data-i18n="btnSignIn">Sign In to Dashboard</span>
+                </button>
+            </form>
+
+            <p class="auth-footnote" data-i18n="authFootnote">
+                Institutional encrypted server session. Multi-device sync enabled across desktop, tablet, and mobile.
+            </p>
+        </div>
+    </div>
+
+    <!-- ================= MAIN DASHBOARD APPLICATION ================= -->
+    <div id="app" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="atlas-logo.svg" alt="Atlas Trade Logo" class="sidebar-logo">
+                <div class="sidebar-brand-text">
+                    <span class="brand-name">ATLAS <b>TRADE</b></span>
+                    <span class="brand-tag">Performance Desk</span>
+                </div>
+            </div>
+
+            <!-- Active Trading Account Switcher with Delete Option -->
+            <div class="account-selector-box">
+                <div class="account-selector-label">
+                    <span data-i18n="activeAccount">Active Trading Account</span>
+                    <button id="btnAddAccount" title="Add Trading Account"
+                        style="color: var(--cyan); font-weight: 800; font-size: 13px;">+ New</button>
+                </div>
+                <select id="accountSelect" class="account-selector-select" title="Switch Trading Account"></select>
+                <div class="account-actions-row">
+                    <span id="accountTypeDisplay" style="font-size: 10px; color: var(--text-dim);">Prop Firm</span>
+                    <button id="btnDeleteAccount" class="btn-delete-account" title="Delete current trading account">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        <span data-i18n="deleteAccount">Delete Account</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar-nav">
+                <button class="nav-link active" data-page="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="7" height="9" rx="1" />
+                        <rect x="14" y="3" width="7" height="5" rx="1" />
+                        <rect x="14" y="12" width="7" height="9" rx="1" />
+                        <rect x="3" y="16" width="7" height="5" rx="1" />
+                    </svg>
+                    <span data-i18n="navDashboard">Dashboard</span>
+                </button>
+                <button class="nav-link" data-page="journal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span data-i18n="navJournal">Trade Journal</span>
+                </button>
+                <button class="nav-link" data-page="calendar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span data-i18n="navCalendar">Daily Performance</span>
+                </button>
+                <button class="nav-link" data-page="analytics">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                    <span data-i18n="navAnalytics">Analytics</span>
+                </button>
+                <!-- 11. Achievements Tab -->
+                <button class="nav-link" data-page="achievements">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="8" r="7" />
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                    </svg>
+                    <span data-i18n="navAchievements">Achievements</span>
+                </button>
+                <!-- Master Admin Link (Shown only for Master Admin) -->
+                <button class="nav-link admin-link hidden" id="navAdmin" data-page="admin">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <span data-i18n="navAdmin">👑 Master Admin</span>
+                </button>
+            </nav>
+
+            <!-- Sidebar Bottom Actions -->
+            <div class="sidebar-footer">
+                <button id="themeToggle" class="footer-btn" title="Toggle Theme">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                    </svg>
+                    <span id="themeLabel" data-i18n="themeLabel">Theme: Default</span>
+                </button>
+                <button id="logoutBtn" class="footer-btn logout">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+                    </svg>
+                    <span data-i18n="signOut">Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Admin Inspecting Notification Banner -->
+            <div id="inspectBanner" class="inspecting-banner hidden">
+                <span>👑 <b data-i18n="inspectMode">Admin Inspection Mode:</b> <span data-i18n="viewing">Currently viewing</span> <b
+                        id="inspectUserEmail">trader@email.com</b></span>
+                <button id="btnExitInspect"><span data-i18n="returnAdmin">Return to Master Admin</span> &rarr;</button>
+            </div>
+
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <p class="eyebrow" data-i18n="headerEyebrow">TRADING DESK &bull; LIVE TERMINAL</p>
+                    <h1 id="pageTitle" data-i18n="pageTitleDashboard">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <!-- 1. Server Sync Status Indicator -->
+                    <div id="serverStatusBadge" class="server-status-badge" title="Multi-Device Server Sync Active">
+                        <span class="status-dot"></span>
+                        <span id="serverStatusText">Server Sync</span>
+                    </div>
+
+                    <!-- 9. Share Feedback Button (Super Admin only can read) -->
+                    <button id="btnOpenFeedback" class="btn-header-feedback" title="Share Platform Feedback">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span data-i18n="feedbackBtn">Feedback</span>
+                    </button>
+
+                    <!-- 5 & 6. Language Switcher (11 Languages) -->
+                    <select id="mainLangSelect" class="lang-select" title="Switch Language">
+                        <option value="en">🇬🇧 English</option>
+                        <option value="id">🇮🇩 Indonesia</option>
+                        <option value="ms">🇲🇾 Melayu</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                        <option value="zh">🇨🇳 简体中文</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                        <option value="th">🇹🇭 ภาษาไทย</option>
+                        <option value="ar">🇸🇦 العربية</option>
+                    </select>
+
+                    <!-- 8. Theme Switcher (Classic, Deep, Default, Dark, Light) -->
+                    <select id="mainThemeSelect" class="theme-select" title="Switch Theme">
+                        <option value="default">✨ Default</option>
+                        <option value="classic">🏛️ Classic</option>
+                        <option value="deep">🌌 Deep</option>
+                        <option value="dark">🌑 Dark</option>
+                        <option value="light">☀️ Light</option>
+                    </select>
+
+                    <!-- Master Admin Badge -->
+                    <div id="adminBadge" class="admin-badge hidden">
+                        <span>👑</span>
+                        <span>MASTER ADMIN</span>
+                    </div>
+
+                    <div class="account-badge-header">
+                        <span class="account-badge-dot"></span>
+                        <span id="headerAccountName">Main Account</span>
+                    </div>
+
+                    <select id="currencySelect" class="currency-select" title="Change Currency Display">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="IDR">IDR (Rp)</option>
+                    </select>
+
+                    <!-- 4. Clickable User Profile (opens Profile modal to edit photo, username, bio) -->
+                    <div class="user-profile" id="btnOpenProfile" title="Click to Edit Trader Profile & Photo">
+                        <div class="avatar-circle" id="userAvatar">TR</div>
+                        <div class="user-meta">
+                            <span class="user-name" id="userNameDisplay">Trader</span>
+                            <span class="user-role" id="userAccountEmail">trader@firm.com</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ================= 1. DASHBOARD PAGE ================= -->
+            <section id="page-dashboard" class="page-content">
+                <!-- Hero Card -->
+                <div class="hero-card">
+                    <div class="hero-main-content">
+                        <span class="hero-pnl-title" data-i18n="heroPnlTitle">Net Realized P&L (Active Account)</span>
+                        <div class="hero-pnl-value positive" id="monthPL">$0.00</div>
+                        <div class="hero-badge positive" id="monthChange">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                <polyline points="17 6 23 6 23 12" />
+                            </svg>
+                            <span id="monthChangeText">+0.00% Realized</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Share PnL as Image Button -->
+                    <div class="hero-share-action">
+                        <button id="btnOpenSharePnL" class="btn-share-pnl" title="Share PnL as Image">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <span data-i18n="sharePnLBtn">Share PnL</span>
+                        </button>
+                    </div>
+
+                    <div class="hero-stats-row">
+                        <div class="hero-stat-item">
+                            <span class="hero-stat-label" data-i18n="winRate">Win Rate</span>
+                            <span class="hero-stat-val" id="winRate" style="color: var(--profit);">0.0%</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="hero-stat-label" data-i18n="profitFactor">Profit Factor</span>
+                            <span class="hero-stat-val" id="pf">0.00</span>
+                        </div>
+                        <div class="hero-stat-item">
+                            <span class="hero-stat-label" data-i18n="totalTrades">Total Trades</span>
+                            <span class="hero-stat-val" id="tradeCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Key Metric Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-title" data-i18n="grossProfit">Gross Profit</span>
+                            <div class="metric-icon" style="color: var(--profit);">▲</div>
+                        </div>
+                        <div class="metric-card-val" id="grossProfit" style="color: var(--profit);">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="grossProfitFooter">Sum of all winning trades</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-title" data-i18n="grossLoss">Gross Loss</span>
+                            <div class="metric-icon" style="color: var(--loss);">▼</div>
+                        </div>
+                        <div class="metric-card-val" id="grossLoss" style="color: var(--loss);">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="grossLossFooter">Sum of all losing trades</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-title" data-i18n="totalLotsTraded">Total Lots Traded</span>
+                            <div class="metric-icon" style="color: var(--cyan);">📊</div>
+                        </div>
+                        <div class="metric-card-val" id="totalLots">0.00 Lots</div>
+                        <div class="metric-card-footer"><span data-i18n="avgLot">Avg</span>: <span id="avgLot">0.00</span> Lots per execution</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-card-top">
+                            <span class="metric-title" data-i18n="maxDrawdown">Max Drawdown</span>
+                            <div class="metric-icon" style="color: var(--loss);">📉</div>
+                        </div>
+                        <div class="metric-card-val" id="drawdown" style="color: var(--loss);">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="drawdownFooter">Peak-to-trough decline</div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title" data-i18n="equityCurveTitle">Cumulative Equity Curve</h3>
+                                <span class="panel-subtitle" data-i18n="equityCurveSubtitle">Account portfolio trajectory</span>
+                            </div>
+                        </div>
+                        <div class="equity-canvas-wrap">
+                            <canvas id="equityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title" data-i18n="recentExecutionsTitle">Recent Executions</h3>
+                                <span class="panel-subtitle" data-i18n="recentExecutionsSubtitle">P&L distribution of last 12 trades</span>
+                            </div>
+                        </div>
+                        <div class="bars-container" id="bars"></div>
+                    </div>
+                </div>
+
+                <!-- Discipline Crown Banner -->
+                <div class="discipline-crown-banner">
+                    <span class="crown-icon">👑</span>
+                    <span class="crown-text" data-i18n="crownBannerText">DISCIPLINE IS YOUR CROWN</span>
+                    <span class="crown-sub" data-i18n="crownBannerSub">Master your mind &bull; Execute your edge &bull; Protect your capital</span>
+                </div>
+            </section>
+
+            <!-- ================= 2. TRADE JOURNAL PAGE ================= -->
+            <section id="page-journal" class="page-content hidden">
+                <div class="journal-toolbar">
+                    <div class="toolbar-info">
+                        <h2 data-i18n="journalHeading">Trade Journal</h2>
+                        <p><span data-i18n="journalSubtitle">Independent trade log for</span> <b id="journalAccountTitle">Selected Account</b>.</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <input type="text" id="filterSearch" class="search-input" placeholder="Search symbol or notes...">
+                        <select id="filterStatus" class="filter-select">
+                            <option value="ALL" data-i18n="optAllStatus">All Statuses</option>
+                            <option value="PROFIT" data-i18n="optProfitOnly">Profit Only</option>
+                            <option value="LOSS" data-i18n="optLossOnly">Loss Only</option>
+                            <option value="BREAK EVEN" data-i18n="optBEOnly">Break Even Only</option>
+                            <option value="OPEN" data-i18n="optOpenOnly">Open Only</option>
+                        </select>
+                        
+                        <!-- 3. MT4 / MT5 Sync Hub Button -->
+                        <button class="btn-mt-sync" id="btnOpenMTSync" title="Sync with MetaTrader 4 & 5">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                            </svg>
+                            <span data-i18n="mtSyncBtn">MT4 / MT5 Sync</span>
+                        </button>
+
+                        <button class="btn-add-trade" id="btnAddTrade">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            <span data-i18n="btnLogNewTrade">+ Log New Trade</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bulk Actions Bar -->
+                <div id="bulkActionsBar" class="bulk-actions-bar hidden">
+                    <div class="bulk-selected-info">
+                        <span class="bulk-count-badge" id="bulkCountBadge">0</span>
+                        <span data-i18n="positionsSelected">positions selected</span>
+                    </div>
+                    <div class="bulk-actions-controls">
+                        <div class="bulk-status-group">
+                            <span data-i18n="changeStatus">Change Status:</span>
+                            <select id="bulkStatusSelect" class="bulk-select">
+                                <option value="">-- Choose Status --</option>
+                                <option value="PROFIT">PROFIT (Winner)</option>
+                                <option value="LOSS">LOSS (Loser)</option>
+                                <option value="BREAK EVEN">BREAK EVEN (BE - $0.00)</option>
+                                <option value="OPEN">OPEN (In Progress)</option>
+                            </select>
+                            <button type="button" class="btn-bulk-apply" id="btnApplyBulkStatus" data-i18n="btnApply">Apply</button>
+                        </div>
+                        <button type="button" class="btn-bulk-delete" id="btnApplyBulkDelete">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            </svg>
+                            <span data-i18n="btnDeleteSelected">Delete Selected</span>
+                        </button>
+                        <button type="button" class="btn-bulk-clear" id="btnCancelBulk" data-i18n="btnDeselectAll">Deselect All</button>
+                    </div>
+                </div>
+
+                <div class="table-panel">
+                    <div class="table-responsive">
+                        <table class="trades-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 38px; text-align: center;">
+                                        <input type="checkbox" id="selectAllTrades" title="Select All Trades"
+                                            style="cursor: pointer; accent-color: var(--primary);">
+                                    </th>
+                                    <th data-i18n="colDate">Date</th>
+                                    <th data-i18n="colSymbol">Symbol</th>
+                                    <th data-i18n="colSide">Side</th>
+                                    <th data-i18n="colLot">Lot Size</th>
+                                    <th data-i18n="colEntry">Entry</th>
+                                    <th data-i18n="colExit">Exit</th>
+                                    <th data-i18n="colNetPL">Net P&L</th>
+                                    <th data-i18n="colStatus">Status</th>
+                                    <!-- 10. Notes Column -->
+                                    <th data-i18n="colNotes">Notes & Reflection</th>
+                                    <th data-i18n="colActions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tradeTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 3. MONTHLY DAILY PERFORMANCE & CALENDAR ================= -->
+            <section id="page-calendar" class="page-content hidden">
+                <div class="journal-toolbar">
+                    <div class="toolbar-info">
+                        <h2 data-i18n="calendarHeading">Monthly Daily Performance</h2>
+                        <p data-i18n="calendarSubtitle">Track day-by-day whether your trading days were in Profit or Loss.</p>
+                    </div>
+                </div>
+
+                <!-- 5 Daily Overview KPIs -->
+                <div class="daily-overview-kpis">
+                    <div class="daily-kpi-card">
+                        <span data-i18n="kpiWinningDays">Winning Days (Profit)</span>
+                        <strong id="kpiGreenDays" style="color: var(--profit);">0 Days</strong>
+                    </div>
+                    <div class="daily-kpi-card">
+                        <span data-i18n="kpiLosingDays">Losing Days (Loss)</span>
+                        <strong id="kpiRedDays" style="color: var(--loss);">0 Days</strong>
+                    </div>
+                    <div class="daily-kpi-card">
+                        <span data-i18n="kpiBEDays">Break Even Days</span>
+                        <strong id="kpiBEDays" style="color: var(--breakeven);">0 Days</strong>
+                    </div>
+                    <div class="daily-kpi-card">
+                        <span data-i18n="kpiDayRate">Profitable Day Rate</span>
+                        <strong id="kpiDayRate" style="color: var(--cyan);">0.0%</strong>
+                    </div>
+                    <div class="daily-kpi-card">
+                        <span data-i18n="kpiBestDay">Best Day P&L</span>
+                        <strong id="kpiBestDay" style="color: var(--profit);">$0.00</strong>
+                    </div>
+                </div>
+
+                <!-- Calendar Panel -->
+                <div class="calendar-panel">
+                    <div class="calendar-header-nav">
+                        <h3 class="calendar-month-title" id="calMonthTitle">October 2026</h3>
+                        <div class="calendar-nav-buttons">
+                            <button class="btn-nav-cal" id="calPrev">&larr; <span data-i18n="calPrev">Previous</span></button>
+                            <button class="btn-nav-cal" id="calToday" data-i18n="calCurrent">Current Month</button>
+                            <button class="btn-nav-cal" id="calNext"><span data-i18n="calNext">Next</span> &rarr;</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-weekdays">
+                        <div class="weekday-col">Sun</div>
+                        <div class="weekday-col">Mon</div>
+                        <div class="weekday-col">Tue</div>
+                        <div class="weekday-col">Wed</div>
+                        <div class="weekday-col">Thu</div>
+                        <div class="weekday-col">Fri</div>
+                        <div class="weekday-col">Sat</div>
+                    </div>
+
+                    <div class="calendar-days-grid" id="calendarDaysGrid"></div>
+                </div>
+
+                <!-- Discipline Crown Banner -->
+                <div class="discipline-crown-banner">
+                    <span class="crown-icon">👑</span>
+                    <span class="crown-text" data-i18n="crownBannerText">DISCIPLINE IS YOUR CROWN</span>
+                    <span class="crown-sub" data-i18n="crownBannerSub2">Daily consistency beats sporadic luck &bull; Protect your crown every single day</span>
+                </div>
+            </section>
+
+            <!-- ================= 4. ANALYTICS PAGE ================= -->
+            <section id="page-analytics" class="page-content hidden">
+                <div class="journal-toolbar">
+                    <div class="toolbar-info">
+                        <h2 data-i18n="analyticsHeading">Strategy & Edge Analytics</h2>
+                        <p data-i18n="analyticsSubtitle">Comprehensive statistical metrics for the active trading account.</p>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-card-top"><span class="metric-title" data-i18n="bestTrade">Best Trade</span><span
+                                style="color: var(--profit);">★</span></div>
+                        <div class="metric-card-val" id="best" style="color: var(--profit);">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="bestTradeFooter">Highest single gain</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-top"><span class="metric-title" data-i18n="worstTrade">Worst Trade</span><span
+                                style="color: var(--loss);">✖</span></div>
+                        <div class="metric-card-val" id="worst" style="color: var(--loss);">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="worstTradeFooter">Largest single loss</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-top"><span class="metric-title" data-i18n="winningStreak">Winning Streak</span><span>🔥</span>
+                        </div>
+                        <div class="metric-card-val" id="streak">0</div>
+                        <div class="metric-card-footer" data-i18n="winningStreakFooter">Consecutive winning trades</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-card-top"><span class="metric-title" data-i18n="expectancy">Trade Expectancy</span><span>🎯</span>
+                        </div>
+                        <div class="metric-card-val" id="expectancy">$0.00</div>
+                        <div class="metric-card-footer" data-i18n="expectancyFooter">Expected return per trade</div>
+                    </div>
+                </div>
+
+                <h3 class="analytics-section-title" data-i18n="executionBreakdown">Execution Breakdown</h3>
+                <div class="analytics-breakdown">
+                    <div class="breakdown-card">
+                        <span class="breakdown-title" data-i18n="outcomeDistribution">Outcome Distribution</span>
+                        <div class="detail-table">
+                            <div class="detail-row"><span data-i18n="profitableWins">Profitable Trades (Wins):</span><strong id="aCountProfit"
+                                    style="color: var(--profit);">0</strong></div>
+                            <div class="detail-row"><span data-i18n="losingLosses">Losing Trades (Losses):</span><strong id="aCountLoss"
+                                    style="color: var(--loss);">0</strong></div>
+                            <div class="detail-row"><span data-i18n="breakEvenTrades">Break Even Trades (BE):</span><strong id="aCountBE"
+                                    style="color: var(--breakeven);">0</strong></div>
+                            <div class="detail-row"><span data-i18n="openPositions">Open Positions:</span><strong id="aCountOpen"
+                                    style="color: var(--open);">0</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-card">
+                        <span class="breakdown-title" data-i18n="volumeAnalytics">Volume & Lot Analytics</span>
+                        <div class="detail-table">
+                            <div class="detail-row"><span data-i18n="totalLotsExec">Total Lots Executed:</span><strong id="aTotalLots"
+                                    style="color: var(--cyan);">0.00</strong></div>
+                            <div class="detail-row"><span data-i18n="avgLotSize">Average Lot Size:</span><strong id="aAvgLot">0.00</strong>
+                            </div>
+                            <div class="detail-row"><span data-i18n="winRateExcl">Win Rate (Excl. BE):</span><strong id="aWin">0.0%</strong>
+                            </div>
+                            <div class="detail-row"><span data-i18n="profitFactor">Profit Factor:</span><strong id="aPF">0.00</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown-card">
+                        <span class="breakdown-title" data-i18n="riskDrawdown">Risk & Drawdown</span>
+                        <div class="detail-table">
+                            <div class="detail-row"><span data-i18n="avgWinner">Average Winner:</span><strong id="aAW"
+                                    style="color: var(--profit);">$0.00</strong></div>
+                            <div class="detail-row"><span data-i18n="avgLoser">Average Loser:</span><strong id="aAL"
+                                    style="color: var(--loss);">$0.00</strong></div>
+                            <div class="detail-row"><span data-i18n="maxDrawdown">Max Drawdown:</span><strong id="aMaxDD"
+                                    style="color: var(--loss);">$0.00</strong></div>
+                            <div class="detail-row"><span data-i18n="totalRealizedPL">Total Realized P&L:</span><strong
+                                    id="aNetTotal">$0.00</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 11. ACHIEVEMENTS & ACCOLADES PAGE ================= -->
+            <section id="page-achievements" class="page-content hidden">
+                <div class="journal-toolbar">
+                    <div class="toolbar-info">
+                        <h2 data-i18n="achievementsTitle">🏆 Trader Achievements & Accolades</h2>
+                        <p data-i18n="achievementsSubtitle">Institutional milestones awarded by Atlas Trade for capital growth, risk mastery, and execution discipline.</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <div class="achievements-summary-badge">
+                            <span id="achUnlockedCount">0</span> / <span id="achTotalCount">8</span> <span data-i18n="unlockedText">Unlocked</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Grid -->
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- Injected dynamically by JS -->
+                </div>
+            </section>
+
+            <!-- ================= 5. MASTER ADMIN DESK ================= -->
+            <section id="page-admin" class="page-content hidden">
+                <div class="journal-toolbar">
+                    <div class="toolbar-info">
+                        <h2>👑 Master Admin Desk</h2>
+                        <p>Platform oversight, trader accounts review, incoming feedbacks, and onboarding questionnaires.</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <input type="text" id="adminSearchTrader" class="search-input"
+                            placeholder="Search trader email...">
+                    </div>
+                </div>
+
+                <div class="admin-stats-grid">
+                    <div class="admin-card">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Total Registered Traders</span>
+                        <div style="font-size: 26px; font-weight: 800; margin-top: 6px;" id="admTotalTraders">0</div>
+                    </div>
+                    <div class="admin-card" style="border-color: rgba(234, 179, 8, 0.4); background: rgba(234, 179, 8, 0.05);">
+                        <span style="font-size: 11px; color: #facc15; text-transform: uppercase; font-weight: 800;">Pending Approvals</span>
+                        <div style="font-size: 26px; font-weight: 900; margin-top: 6px; color: #facc15;" id="admPendingTraders">0</div>
+                    </div>
+                    <div class="admin-card">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Global Executed Lots</span>
+                        <div style="font-size: 26px; font-weight: 800; margin-top: 6px; color: var(--cyan);" id="admTotalLots">0.00 Lots</div>
+                    </div>
+                    <div class="admin-card">
+                        <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Platform Aggregate Net P&L</span>
+                        <div style="font-size: 26px; font-weight: 800; margin-top: 6px;" id="admGlobalPL">$0.00</div>
+                    </div>
+                </div>
+
+                <!-- Admin Traders Table -->
+                <div class="table-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="padding: 16px 20px 0;">
+                        <h3 class="panel-title">Registered Trader Accounts</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Trader Email</th>
+                                    <th>Trader Name</th>
+                                    <th>Access Status</th>
+                                    <th>Trading Accounts</th>
+                                    <th>Total Trades</th>
+                                    <th>Total Lots</th>
+                                    <th>Net Realized P&L</th>
+                                    <th>Admin Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTradersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 9. Super Admin Feedback Desk -->
+                <div class="table-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header" style="padding: 16px 20px 0; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 class="panel-title">💬 Trader Feedback Desk (Super Admin Only)</h3>
+                            <span class="panel-subtitle">Feedbacks submitted by traders across the platform</span>
+                        </div>
+                        <span class="badge-feedback-count" id="adminFeedbackCount">0 Submissions</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Trader</th>
+                                    <th>Rating</th>
+                                    <th>Category</th>
+                                    <th>Message</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminFeedbackTable">
+                                <tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-muted);">No feedback records loaded yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 7. Super Admin Onboarding Questionnaires Desk -->
+                <div class="table-panel">
+                    <div class="panel-header" style="padding: 16px 20px 0; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 class="panel-title">📋 Trader Onboarding Questionnaires</h3>
+                            <span class="panel-subtitle">Survey responses collected during trader registration</span>
+                        </div>
+                        <span class="badge-feedback-count" id="adminQuestionnaireCount">0 Responses</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Trader Email</th>
+                                    <th>Trading Goal</th>
+                                    <th>Discovery Source</th>
+                                    <th>Target Profit & Milestone</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminQuestionnaireTable">
+                                <tr><td colspan="5" style="text-align:center; padding: 20px; color: var(--text-muted);">No questionnaire records loaded yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ================= 2. SHARE PNL IMAGE MODAL ================= -->
+    <div id="modalSharePnL" class="modal-overlay hidden">
+        <div class="modal-dialog modal-share-dialog">
+            <div class="modal-header">
+                <h3 data-i18n="sharePnLModalTitle">📸 Share Institutional PnL Card</h3>
+                <button id="btnCloseSharePnL" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;" data-i18n="sharePnLModalSub">
+                    High-definition branded performance graphic ready for Twitter, Discord, Instagram, and Telegram.
+                </p>
+
+                <!-- Visual Card Container (Canvas renders here) -->
+                <div class="pnl-card-preview-wrap">
+                    <canvas id="pnlCanvas" width="800" height="460" class="pnl-canvas-display"></canvas>
+                </div>
+
+                <div class="share-actions-row">
+                    <button type="button" class="btn-primary" id="btnDownloadPnL">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span data-i18n="downloadPNG">Download PNG</span>
+                    </button>
+                    <button type="button" class="btn-secondary" id="btnCopyPnL">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        <span data-i18n="copyImage">Copy to Clipboard</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 3. METATRADER 4 & 5 SYNC MODAL ================= -->
+    <div id="modalMTSync" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 620px;">
+            <div class="modal-header">
+                <div>
+                    <h3 data-i18n="mtSyncTitle">⚡ MetaTrader 4 & 5 Synchronization Hub</h3>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Sync your broker account history directly into your active trade journal</p>
+                </div>
+                <button id="btnCloseMTSync" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-tabs">
+                    <button type="button" class="mt-tab active" data-mttab="import">📁 Statement Report Import</button>
+                    <button type="button" class="mt-tab" data-mttab="bridge">🔗 Live Broker Bridge</button>
+                    <button type="button" class="mt-tab" data-mttab="demo">⚡ Quick Test Sync</button>
+                </div>
+
+                <!-- Tab 1: Statement Import -->
+                <div id="mtTabImport" class="mt-tab-content">
+                    <div class="mt-dropzone" id="mtDropzone">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--cyan); margin-bottom: 8px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <p style="font-weight: 700; font-size: 13px;">Drag & Drop MT4/MT5 HTML / CSV Detailed Report</p>
+                        <span style="font-size: 11px; color: var(--text-muted);">or click to select file from your computer</span>
+                        <input type="file" id="mtFileInput" accept=".html,.htm,.csv,.txt" style="display: none;">
+                    </div>
+                    <div id="mtFileStatus" class="mt-file-status hidden"></div>
+                </div>
+
+                <!-- Tab 2: Live Broker Bridge -->
+                <div id="mtTabBridge" class="mt-tab-content hidden">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>MetaTrader Platform</label>
+                            <select id="mtBridgePlatform" class="input-field">
+                                <option value="MT5">MetaTrader 5 (MT5)</option>
+                                <option value="MT4">MetaTrader 4 (MT4)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Broker Server</label>
+                            <input id="mtBridgeServer" class="input-field" placeholder="e.g. FTMO-Server / Apex-Live">
+                        </div>
+                        <div class="form-group">
+                            <label>Account Login ID</label>
+                            <input id="mtBridgeLogin" class="input-field" placeholder="e.g. 8920412">
+                        </div>
+                        <div class="form-group">
+                            <label>Investor Password / Token</label>
+                            <input id="mtBridgePass" class="input-field" type="password" placeholder="Read-Only Password">
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+                        🔒 <b>Security Note:</b> Read-Only Investor access grants zero trading execution rights — it only reads closed positions and orders.
+                    </p>
+                    <button type="button" class="btn-primary" id="btnConnectBridge" style="margin-top: 14px; width: 100%;">
+                        <span>Connect & Sync Positions</span>
+                    </button>
+                </div>
+
+                <!-- Tab 3: Quick Test Demo Sync -->
+                <div id="mtTabDemo" class="mt-tab-content hidden">
+                    <div class="mt-demo-box">
+                        <h4>Instant Institutional Sample Sync</h4>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 8px 0 14px;">
+                            Instantly simulate pulling 4 realistic verified executions from MetaTrader 5 (XAUUSD, EURUSD, US30) directly into your active journal and server database.
+                        </p>
+                        <button type="button" class="btn-primary" id="btnRunDemoSync">
+                            <span>⚡ Sync 4 Sample MT5 Trades Now</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="mtSyncResult" class="mt-sync-result hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 4. TRADER PROFILE & EDIT MODAL ================= -->
+    <div id="modalProfile" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 520px;">
+            <div class="modal-header">
+                <h3 data-i18n="profileModalTitle">Edit Trader Profile</h3>
+                <button id="btnCloseProfileModal" class="btn-close-modal">&times;</button>
+            </div>
+            <form id="profileForm" class="modal-body">
+                <!-- Avatar Preview & Change -->
+                <div class="profile-avatar-row">
+                    <div class="profile-avatar-preview" id="profAvatarPreview">TR</div>
+                    <div class="profile-avatar-controls">
+                        <label class="btn-secondary" style="display: inline-block; cursor: pointer; padding: 6px 14px; font-size: 12px;">
+                            <span data-i18n="uploadPhoto">Upload Photo</span>
+                            <input type="file" id="profPhotoInput" accept="image/*" style="display: none;">
+                        </label>
+                        <button type="button" class="btn-secondary" id="btnRemovePhoto" style="padding: 6px 12px; font-size: 12px;">Remove</button>
+                        <p style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">JPG, PNG or GIF. Max 2MB.</p>
+                    </div>
+                </div>
+
+                <!-- Preset Avatars Selector -->
+                <div class="preset-avatars-section">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Institutional Avatar Presets</label>
+                    <div class="preset-avatars-grid">
+                        <button type="button" class="preset-avatar-btn" data-avatar="🦁">🦁</button>
+                        <button type="button" class="preset-avatar-btn" data-avatar="🐂">🐂</button>
+                        <button type="button" class="preset-avatar-btn" data-avatar="🦅">🦅</button>
+                        <button type="button" class="preset-avatar-btn" data-avatar="🐺">🐺</button>
+                        <button type="button" class="preset-avatar-btn" data-avatar="💎">💎</button>
+                        <button type="button" class="preset-avatar-btn" data-avatar="👑">👑</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="profName" data-i18n="traderUsername">Trader Username / Callsign</label>
+                    <input id="profName" class="input-field" type="text" placeholder="e.g. Alpha Satria" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="profBio" data-i18n="traderBio">Trading Style & Bio</label>
+                    <input id="profBio" class="input-field" type="text" placeholder="e.g. ICT Intraday Scalper & Prop Trader">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelProfile" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 10px 24px;">
+                        <span data-i18n="saveChanges">Save Changes</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 7. ONBOARDING QUESTIONNAIRE MODAL ================= -->
+    <div id="modalOnboarding" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 580px;">
+            <div class="modal-header">
+                <div>
+                    <h3 data-i18n="onboardingTitle">🎯 Welcome to Atlas Trade — Trader Profile Setup</h3>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Help us tailor your desk experience by completing this brief survey</p>
+                </div>
+            </div>
+            <form id="onboardingForm" class="modal-body">
+                <!-- Question 1: Goal -->
+                <div class="survey-question-block">
+                    <label class="survey-label">1. <span data-i18n="surveyQ1">Apa tujuan utama Anda bergabung dengan Atlas Trade?</span></label>
+                    <div class="survey-options-grid">
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbGoal" value="Prop Firm Funding (FTMO / Apex / Topstep)" checked>
+                            <span>🏆 Lolos Evaluasi & Funded Prop Firm</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbGoal" value="Full-Time Independent Trading">
+                            <span>💼 Menjadi Full-Time Independent Trader</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbGoal" value="Trading Psychology & Journal Discipline">
+                            <span>🧠 Membangun Disiplin & Jurnal Psikologi</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbGoal" value="Strategy Validation & Risk Control">
+                            <span>📊 Validasi Strategi & Manajemen Risiko</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2: Source -->
+                <div class="survey-question-block">
+                    <label class="survey-label">2. <span data-i18n="surveyQ2">Dari mana Anda mengetahui tentang Atlas Trade?</span></label>
+                    <div class="survey-options-grid">
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbSource" value="Fellow Trader Referral / Mentor" checked>
+                            <span>🤝 Rekomendasi Teman / Mentor Trader</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbSource" value="YouTube / Trading Education">
+                            <span>📺 YouTube / Edukasi Trading</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbSource" value="Discord / Telegram Prop Firm Community">
+                            <span>💬 Komunitas Discord / Telegram</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbSource" value="TradingView / Social Media">
+                            <span>📈 TradingView / Instagram / TikTok</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3: Target -->
+                <div class="survey-question-block">
+                    <label class="survey-label">3. <span data-i18n="surveyQ3">Apa target tujuan trading Anda?</span></label>
+                    <div class="survey-options-grid">
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbTarget" value="Target $1,000 - $3,000 / month consistent" checked>
+                            <span>💵 Konsisten $1,000 - $3,000 / bulan</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbTarget" value="Target Pass $100K - $200K Funded Challenge">
+                            <span>🎯 Lolos Akun $100,000+ Funded Desk</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbTarget" value="Target $10,000+ Cumulative Net Profits">
+                            <span>💎 Akumulasi Profit Bersih $10,000+</span>
+                        </label>
+                        <label class="survey-option-card">
+                            <input type="radio" name="onbTarget" value="Strict Drawdown under 3% & 5-10% monthly growth">
+                            <span>🛡️ Drawdown Rendah & Pertumbuhan Konsisten</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 14px; width: 100%;">
+                    <span data-i18n="btnSubmitSurvey">Complete & Enter Desk &rarr;</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 9. SHARE FEEDBACK MODAL ================= -->
+    <div id="modalFeedback" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 480px;">
+            <div class="modal-header">
+                <div>
+                    <h3 data-i18n="feedbackTitle">💬 Share Platform Feedback</h3>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Your feedback goes directly and exclusively to the Super Admin desk</p>
+                </div>
+                <button id="btnCloseFeedback" class="btn-close-modal">&times;</button>
+            </div>
+            <form id="feedbackForm" class="modal-body">
+                <!-- Rating -->
+                <div class="form-group">
+                    <label data-i18n="platformRating">Desk Rating</label>
+                    <div class="star-rating-row" id="starRating">
+                        <span class="star-item active" data-rating="1">★</span>
+                        <span class="star-item active" data-rating="2">★</span>
+                        <span class="star-item active" data-rating="3">★</span>
+                        <span class="star-item active" data-rating="4">★</span>
+                        <span class="star-item active" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="fbRatingVal" value="5">
+                </div>
+
+                <div class="form-group">
+                    <label for="fbCategory" data-i18n="feedbackCategory">Category</label>
+                    <select id="fbCategory" class="input-field">
+                        <option value="Feature Request">Feature Request</option>
+                        <option value="Bug Report">Bug / Issue Report</option>
+                        <option value="User Experience">User Experience & Design</option>
+                        <option value="Performance">Platform Speed & Sync</option>
+                        <option value="General">General Praise & Comments</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fbMessage" data-i18n="feedbackMessage">Message / Suggestion</label>
+                    <textarea id="fbMessage" class="input-field" rows="4" placeholder="Tell us how we can make Atlas Trade even more powerful for your trading desk..." required></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelFeedback" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 10px 24px;">
+                        <span data-i18n="btnSendFeedback">Send Feedback</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 10. TRADE NOTE VIEWER / EDITOR MODAL ================= -->
+    <div id="modalNote" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 500px;">
+            <div class="modal-header">
+                <div>
+                    <h3 id="noteModalTitle" data-i18n="noteModalTitle">📝 Trade Reflection & Strategy Notes</h3>
+                    <p id="noteModalSubtitle" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Trade execution journal</p>
+                </div>
+                <button id="btnCloseNoteModal" class="btn-close-modal">&times;</button>
+            </div>
+            <form id="noteForm" class="modal-body">
+                <input type="hidden" id="noteTradeId">
+                <div class="form-group">
+                    <label for="noteInputText" data-i18n="notesReflection">Detailed Notes & Trade Reflection</label>
+                    <textarea id="noteInputText" class="input-field" rows="6" placeholder="Document your trade execution rationale, emotional state, technical confirmation, and lesson learned..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelNote" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 10px 24px;">
+                        <span data-i18n="saveNote">Save Note</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 11. ACHIEVEMENT CERTIFICATE MODAL ================= -->
+    <div id="modalCert" class="modal-overlay hidden">
+        <div class="modal-dialog modal-share-dialog">
+            <div class="modal-header">
+                <h3 data-i18n="certModalTitle">🏆 Trader Institutional Accolade</h3>
+                <button id="btnCloseCertModal" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div class="pnl-card-preview-wrap">
+                    <canvas id="certCanvas" width="800" height="480" class="pnl-canvas-display"></canvas>
+                </div>
+                <div class="share-actions-row">
+                    <button type="button" class="btn-primary" id="btnDownloadCert">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        <span data-i18n="downloadCertificate">Download Certificate (PNG)</span>
+                    </button>
+                    <button type="button" class="btn-secondary" id="btnCopyCert">
+                        <span data-i18n="copyImage">Copy to Clipboard</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LOG / EDIT TRADE MODAL ================= -->
+    <div id="modalTrade" class="modal-overlay hidden">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 id="modalTitle" data-i18n="logTradeTitle">Log New Trade</h3>
+                <button id="btnCloseModal" class="btn-close-modal">&times;</button>
+            </div>
+
+            <form id="tradeForm" class="modal-body">
+                <input type="hidden" id="editTradeId">
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="tDate" data-i18n="formDate">Date</label>
+                        <input id="tDate" class="input-field" type="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tPair" data-i18n="formPair">Symbol / Pair</label>
+                        <input id="tPair" class="input-field" placeholder="e.g. XAUUSD, NAS100, EURUSD" required
+                            style="text-transform: uppercase;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tSide" data-i18n="formSide">Side</label>
+                        <select id="tSide" class="input-field">
+                            <option value="BUY">BUY / LONG</option>
+                            <option value="SELL">SELL / SHORT</option>
+                        </select>
+                    </div>
+
+                    <!-- STATUS SELECTOR: PROFIT, LOSS, BREAK EVEN, OPEN -->
+                    <div class="form-group">
+                        <label for="tStatus" data-i18n="formStatus">Trade Status</label>
+                        <select id="tStatus" class="input-field">
+                            <option value="PROFIT">PROFIT (Winner)</option>
+                            <option value="LOSS">LOSS (Loser)</option>
+                            <option value="BREAK EVEN">BREAK EVEN (BE)</option>
+                            <option value="OPEN">OPEN (In Progress)</option>
+                        </select>
+                    </div>
+
+                    <!-- LOT SIZE -->
+                    <div class="form-group">
+                        <label for="tLot" data-i18n="formLot">Lot Size (Lots)</label>
+                        <input id="tLot" class="input-field" type="number" step="0.01" min="0.01"
+                            placeholder="e.g. 1.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tEntry" data-i18n="formEntry">Entry Price</label>
+                        <input id="tEntry" class="input-field" type="number" step="any" placeholder="e.g. 2650.50"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tExit" data-i18n="formExit">Exit Price (Optional if Open)</label>
+                        <input id="tExit" class="input-field" type="number" step="any" placeholder="e.g. 2675.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tPL" id="lblPL" data-i18n="formPL">Net Realized P&L ($)</label>
+                        <input id="tPL" class="input-field" type="number" step="any" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <!-- 10. Notes / Setup Strategy Input in modal -->
+                <div class="form-group" style="margin-top: 14px;">
+                    <label for="tNotes" data-i18n="formNotes">Notes / Setup Strategy & Reflection (Optional)</label>
+                    <textarea id="tNotes" class="input-field" rows="3"
+                        placeholder="e.g. London breakout continuation, 4H orderblock mitigation, key liquidity sweep"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelTrade" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 10px 24px;">
+                        <span data-i18n="btnSaveTrade">Save Trade</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= ADD TRADING ACCOUNT MODAL ================= -->
+    <div id="modalAccount" class="modal-overlay hidden">
+        <div class="modal-dialog" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 data-i18n="addAccountTitle">Add Trading Account</h3>
+                <button id="btnCloseAccountModal" class="btn-close-modal">&times;</button>
+            </div>
+
+            <form id="accountForm" class="modal-body">
+                <div class="form-group">
+                    <label for="newAccountName" data-i18n="accountNameLabel">Trading Account Name</label>
+                    <input id="newAccountName" class="input-field" type="text" placeholder="e.g. FTMO $100K Challenge"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="newAccountType" data-i18n="accountTypeLabel">Account Type</label>
+                    <select id="newAccountType" class="input-field">
+                        <option value="Prop Firm Funded">Prop Firm Funded</option>
+                        <option value="Prop Firm Challenge">Prop Firm Challenge</option>
+                        <option value="Live Personal Broker">Live Personal Broker</option>
+                        <option value="Demo / Practice">Demo / Practice</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="btnCancelAccount" data-i18n="cancel">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 10px 20px;">
+                        <span data-i18n="btnAddAccountSubmit">Add Account</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
